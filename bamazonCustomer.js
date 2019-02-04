@@ -22,7 +22,8 @@ var numOfItems = 0;
 connection.query("SELECT item_id, product_name, price FROM products", function (err, res) {
     if (err) throw err;
     numOfItems = res.length;//assigns number of items in database
-    //uses console.table to format the returned query in a readable table   
+    
+    //uses console.table to format the returned query in a readable table  
     var table = cTable.getTable(res);
     console.log("\nProducts avaliable to purchase\n------------------------------\n" + table);
     buy();
