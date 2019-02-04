@@ -50,23 +50,25 @@ function determine() {
 function viewProd() {
     connection.query("SELECT item_id, product_name, price, stock_quantity FROM products", function (err, res) {
         if (err) throw err;
-        var table = cTable.getTable("\n" + res);
-        console.log(table);
+        var table = cTable.getTable(res);
+        console.log("\n" + table);
+        //does the user want to do anything else?
+        doMore();
     })
-    connection.end();
 }
 
 //Pulls up products with stock_quantity less that 5
 function viewLow() {
     connection.query("SELECT item_id, product_name, price, stock_quantity FROM products WHERE stock_quantity < 5", function (err, res) {
         if (err) throw err;
-        var table = cTable.getTable("\n" + res);
-        console.log(table);
+        var table = cTable.getTable(res);
+        console.log("\n" + table);
+        //does the user want to do anything else?
+        doMore();
     })
-    connection.end();
 }
 
-//
+//allows manager to add inventory to an items stock
 function addInv() {
     //declares variable to hold number of items in database
     var numOfItems = 0;
@@ -88,7 +90,7 @@ function addInv() {
                 if (integer && (positive === 1) && (value <= numOfItems)) {
                     return true;
                 } else {
-                    return "Please select a valid item id."
+                    return "Please select a valid item id.";
                 }
             }
         },
@@ -104,14 +106,107 @@ function addInv() {
                 if (integer && (positive === 1)) {
                     return true;
                 } else {
-                    return "Please enter a number."
+                    return "Please enter a number.";
                 }
             }
-        }]).then()
+        }]).then(function (input) {
+            var item = input.item;
+            var qty = input.qty;
+            //the mySQL command to access a specific item
+            connection.query("SELECT * FROM products WHERE item_id = ?", item, function (err, res) {
+                if (err) throw err;
+                var stock = res[0].stock_quantity;
+                var changeQty = +stock + +qty;
+                //command to update items stock quantity
+                connection.query("UPDATE products SET stock_quantity = ? WHERE item_id = ?", [changeQty, item]);
+                //does the user want to do anything else?
+                doMore();
+            })
+        })
 }
 
 function newProd() {
+    inquirer
+        .prompt([{
+            name: "item",
+            type: "input",
+            message: "What is the item you would like to add?",
+            validate: function (input) {
+                if(input === "") {
+                    return "Please enter the items name.";
+                }
+                return true;
+            }
+        },
+        {
+            name: "department",
+            type: "input",
+            message: "What department does it belong to?",
+            validate: function (input) {
+                if(input === "") {
+                    return "Please enter the department";
+                }
+                return true;
+            }
+        },
+        {
+            name: "price",
+            type: "input",
+            message: "What is the price per unit?",
+            validate: function (input) {
+                //makes sure the price is positive.
+                var positive = Math.sign(input);
+                if(input !== NaN && (positive !== 1)) {
+                    return "Please enter a valid price.";
+                }
+                return true;
+            }
+        },
+        {
+            name: "qty",
+            type: "input",
+            message: "How many of the item are you adding?",
+            validate: function (value) {
+                //makes sure the value entered is a positive integer
+                var integer = Number.isInteger(parseFloat(value));
+                var positive = Math.sign(value);
 
+                if (integer && (positive === 1)) {
+                    return true;
+                } else {
+                    return "Please enter a valid number.";
+                }
+            }
+        }]).then(function (answers) {
+            var item = answers.item;
+            var department = answers.department;
+            var price = answers.price;
+            var qty = answers.qty;
+            //creates new row in database
+            connection.query("INSERT INTO products(product_name, department_name, price, stock_quantity) VALUES (?, ?, ?, ?)", [item, department, price, qty]);
+            //does the user want to do anything else?
+            doMore();
+        })
+}
+
+//function to find out if the user wants to do anything else
+function doMore() {
+    inquirer
+        .prompt({
+            name: "doMore",
+            type: "confirm",
+            message: "Is there anything else you would like to do?"
+        }).then(function (answer) {
+            answer = answer.doMore;
+            if (answer === true) {
+                //if the user selects yes, it goes back to the first menu
+                determine();               
+            } else {
+                //if the user says no, the connection to the database is ended.
+                console.log("Terminating session")
+                connection.end();
+            }
+        })
 }
 
 determine();
