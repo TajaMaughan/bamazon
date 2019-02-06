@@ -42,7 +42,7 @@ If Add inventory is chosen, the manager is asked for the id of the product and t
 ![database add inventory](/images/dbPostAdd.PNG)
 
 ### Add New Product
-If Add new Prodect is chosen, the manager will be asked to enter the name of the product, the dapartment it is in, the price per unit, and the number they want to add. The database is updated accordingly
+If Add new Prodect is chosen, the manager will be asked to enter the name of the product, the dapartment it is in, the price per unit, and the number they want to add. The database is updated accordingly.
 
 ![create new product](/images/create.PNG)
 ![database new product](/images/dbAfterCreate.PNG)
