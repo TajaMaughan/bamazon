@@ -24,24 +24,24 @@ If the user tries to buy more than of a product that there is stock of, it will 
 When the manager file is initiated, a list of avaliable actions will be given.
 ![manager start](/images/managerStart.PNG)
 
-#### View Inventory
+### View Inventory
 If View inventory is chosen, a list of everything in the database will be pulled up.
 
 ![view Products](/images/viewProduct.PNG)
 ![database manager start](/images/dbStartManager.PNG)
 
-#### View Low Inventory
+### View Low Inventory
 If View low inventory is chosen, a list of every product with less than 5 units in stock will be listed.
 
 ![low inventory](/images/lowInventory.PNG)
 
-#### Add Inventory
+### Add Inventory
 If Add inventory is chosen, the manager is asked for the id of the product and the number they would like to add. After the information is given the database is updated.
 
 ![add inventory](/images/addInventory.PNG)
 ![database add inventory](/images/dbPostAdd.PNG)
 
-#### Add New Product
+### Add New Product
 If Add new Prodect is chosen, the manager will be asked to enter the name of the product, the dapartment it is in, the price per unit, and the number they want to add. The database is updated accordingly
 
 ![create new product](/images/create.PNG)
