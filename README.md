@@ -1,1 +1,4 @@
-# bamazon
+# Bamazon
+## Customer Interface
+
+## Manager Interface
